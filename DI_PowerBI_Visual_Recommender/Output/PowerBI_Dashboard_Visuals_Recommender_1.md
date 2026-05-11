@@ -1,151 +1,206 @@
 _____________________________________________
 ## Author: AAVA
 ## Created on:
-## Description: Power BI Dashboard Visuals Recommender for Credit Acquisition Reporting
+## Description: Power BI Dashboard Visuals Recommender for Credit Card Acquisition Analytical Reporting
 ## Version: 1
 ## Updated on:
 _____________________________________________
 
-# 1. Visual Recommendations
+# Power BI Dashboard Visuals Recommender
 
+## 1. Visual Recommendations
+
+### 1. Application & Activation Funnel Report
 | Data Element | DAX Query / Measure | Recommended Visual | Data Fields | Measures | Interactivity | Drillthrough | Justification | Optimization Tips |
-|--------------|---------------------|-------------------|-------------|----------|---------------|--------------|--------------|-------------------|
-| Total Credit Applications | SUM('FactCredit'[ApplicationCount]) | Card Visual | ApplicationCount | Total Applications | Cross-filter with slicers | Yes (by Region, Channel) | Card visual highlights headline KPI | Use measure, not calculated column |
-| Approved Applications | SUM('FactCredit'[ApprovedCount]) | Card Visual | ApprovedCount | Approved Applications | Cross-filter with slicers | Yes | KPI tracking | Use measure |
-| Approval Rate | DIVIDE([Approved Applications], [Total Applications]) | KPI Visual | ApplicationCount, ApprovedCount | Approval Rate | Cross-filter with slicers | Yes | Shows efficiency | Use DIVIDE for error handling |
-| Applications by Region | SUM('FactCredit'[ApplicationCount]) | Clustered Column Chart | Region, ApplicationCount | Applications by Region | Highlight, cross-filter | Yes | Regional trend analysis | Use dimension table for Region |
-| Applications by Channel | SUM('FactCredit'[ApplicationCount]) | Clustered Bar Chart | Channel, ApplicationCount | Applications by Channel | Highlight, cross-filter | Yes | Channel performance | Use Channel as dimension |
-| Monthly Trend of Applications | SUM('FactCredit'[ApplicationCount]) | Line Chart | ApplicationDate, ApplicationCount | Applications over Time | Zoom, cross-filter | Yes | Trend analysis | Use date hierarchy |
-| Approval Rate by Month | DIVIDE([Approved Applications], [Total Applications]) | Line and Clustered Column Chart | ApplicationDate, ApprovedCount, ApplicationCount | Approval Rate, Applications | Zoom, cross-filter | Yes | Dual axis for rate and volume | Use combo chart with secondary axis |
-| Average Processing Time | AVERAGE('FactCredit'[ProcessingTime]) | Card Visual | ProcessingTime | Avg Processing Time | Cross-filter | Yes | Operational efficiency | Use measure |
-| Processing Time Distribution | AVERAGE('FactCredit'[ProcessingTime]) | Box & Whisker (custom) or Histogram | ProcessingTime | Avg Processing Time | Cross-filter | Yes | Distribution analysis | Use histogram for bins |
-| Applications by Product | SUM('FactCredit'[ApplicationCount]) | Treemap | Product, ApplicationCount | Applications by Product | Cross-filter | Yes | Product mix | Use Product dimension |
-| Applications by Risk Segment | SUM('FactCredit'[ApplicationCount]) | Donut Chart | RiskSegment, ApplicationCount | Applications by Risk | Cross-filter | Yes | Risk segmentation | Use RiskSegment dimension |
-| Decline Reasons | COUNT('FactCredit'[DeclineReason]) | Bar Chart | DeclineReason, ApplicationCount | Decline Counts | Cross-filter | Yes | Root cause analysis | Use DeclineReason dimension |
-| Applications Map | SUM('FactCredit'[ApplicationCount]) | Map Visual | Region, Latitude, Longitude, ApplicationCount | Applications by Location | Zoom, cross-filter | Yes | Geographical insights | Use map visual |
-| Application Funnel | SUM('FactCredit'[ApplicationCount]) | Funnel Chart | ApplicationStage, ApplicationCount | Funnel Counts | Cross-filter | Yes | Process drop-off | Use ApplicationStage dimension |
+|--------------|---------------------|-------------------|-------------|----------|---------------|-------------|--------------|-------------------|
+| Application Volume Trend | COUNT(Applications) | Line Chart | Application Date, Application Count | Total Applications | Time slicer, Channel/Product filters | Application-level drillthrough | Shows trends over time | Use date table, filter context |
+| Approval Rate | DIVIDE(COUNT(Approved), COUNT(Applications)) | KPI Visual | Application Status | Approval Rate | Channel/Product/Segment slicers | Application-level drillthrough | KPI for conversion | Use measure, avoid calculated column |
+| Activation Rate | DIVIDE(COUNT(Activated), COUNT(Approved)) | KPI Visual | Activation Status | Activation Rate | Channel/Product/Segment slicers | Application-level drillthrough | KPI for onboarding | Use measure |
+| Drop-off by Funnel Stage | (Applications - Activations) / Applications | Funnel Chart | Funnel Stage, Application Count | Drop-off Rate | Channel/Product/Segment slicers | Application-level drillthrough | Visualizes bottlenecks | Use funnel visual, optimize DAX |
+| Avg. Time to Approval | AVERAGE(Approval Date - Application Date) | Card Visual | Application/Approval Dates | Avg. Time to Approval | Channel/Product/Segment slicers | Application-level drillthrough | Shows process efficiency | Use DAX date diff |
+| Demographic Breakdown | COUNT(Applications) | Clustered Bar/Column Chart | Age Group, Geography, Income Level | Application Count | Slicers for demographics | Drillthrough to segment | Segment analysis | Use star schema |
 
-# 2. Semantic Model Recommendations
+### 2. Campaign Performance Analytics Report
+| Data Element | DAX Query / Measure | Recommended Visual | Data Fields | Measures | Interactivity | Drillthrough | Justification | Optimization Tips |
+|--------------|---------------------|-------------------|-------------|----------|---------------|-------------|--------------|-------------------|
+| Campaign ROI | (SUM(Revenue) - SUM(Campaign Cost)) / SUM(Campaign Cost) | KPI Visual | Campaign, Revenue, Cost | Campaign ROI | Campaign/Channel/Product slicers | Drillthrough to campaign details | Key marketing metric | Use measure, avoid row context |
+| Cost per Acquisition | SUM(Campaign Cost) / COUNT(Activations) | Card Visual | Campaign, Cost, Activations | Cost per Acquisition | Campaign/Channel/Product slicers | Drillthrough to campaign details | Efficiency metric | Use measure |
+| Conversion Rate by Campaign | COUNT(Activations) / COUNT(Applications) | Clustered Column Chart | Campaign, Applications, Activations | Conversion Rate | Campaign/Channel/Product slicers | Drillthrough to campaign details | Compare performance | Use calculated measure |
+| Campaign Timeline | COUNT(Applications) | Line and Clustered Column Chart | Campaign Start/End, Applications | Application Volume | Time slicer | Drillthrough to campaign details | Visualizes campaign impact | Use combo chart |
 
-- **Fact Tables:**
-  - FactCredit (ApplicationID, ApplicationDate, ProductID, ChannelID, RegionID, RiskSegmentID, ApplicationCount, ApprovedCount, ProcessingTime, DeclineReasonID, ApplicationStageID)
-- **Dimension Tables:**
-  - DimProduct (ProductID, ProductName, ProductType)
-  - DimChannel (ChannelID, ChannelName)
-  - DimRegion (RegionID, RegionName, Latitude, Longitude)
-  - DimRiskSegment (RiskSegmentID, RiskSegmentName)
-  - DimDeclineReason (DeclineReasonID, DeclineReason)
-  - DimApplicationStage (ApplicationStageID, StageName)
-  - DimDate (DateKey, Date, Month, Quarter, Year)
-- **Relationships:**
-  - FactCredit joins to each dimension on respective ID
-- **Cardinality:**
-  - Many-to-one (Fact to Dimension)
-- **Relationship Direction:**
-  - Single direction (from dimension to fact)
-- **Hierarchies:**
-  - Date (Year > Quarter > Month)
-  - Region (Country > State > City)
-- **Aggregations:**
-  - Pre-aggregate FactCredit by month for trend visuals
-- **Calculated Tables:**
-  - Disconnected table for KPI targets if needed
+### 3. Credit Risk Segmentation Report
+| Data Element | DAX Query / Measure | Recommended Visual | Data Fields | Measures | Interactivity | Drillthrough | Justification | Optimization Tips |
+|--------------|---------------------|-------------------|-------------|----------|---------------|-------------|--------------|-------------------|
+| Approval Rate by Risk Tier | COUNT(Approved) / COUNT(Applications) | Clustered Bar Chart | Risk Tier, Applications, Approvals | Approval Rate | Risk Tier/Product/Channel slicers | Drillthrough to applicant details | Risk-based analysis | Use calculated column for tier |
+| Credit Score Distribution | AVERAGE(Credit Score) | Histogram/Column Chart | Credit Score | Avg. Credit Score | Product/Channel/Segment slicers | Drillthrough to applicant details | Visualizes risk profile | Use binning |
+| Decline Rate by Segment | COUNT(Declined) / COUNT(Applications) | Matrix | Segment, Applications, Declines | Decline Rate | Segment/Product/Channel slicers | Drillthrough to applicant details | Multi-dim analysis | Use matrix with conditional formatting |
 
-# 3. DAX Recommendations
+### 4. Fraud Screening Effectiveness Report
+| Data Element | DAX Query / Measure | Recommended Visual | Data Fields | Measures | Interactivity | Drillthrough | Justification | Optimization Tips |
+|--------------|---------------------|-------------------|-------------|----------|---------------|-------------|--------------|-------------------|
+| Fraud Detection Rate | COUNT(Confirmed Fraud) / COUNT(Applications) | KPI Visual | Fraud Status | Fraud Detection Rate | Fraud Rule/Channel/Product slicers | Drillthrough to flagged cases | Key fraud metric | Use measure |
+| False Positive Rate | COUNT(Cleared Fraud Flags) / COUNT(Fraud Flags) | Card Visual | Fraud Flag Status | False Positive Rate | Fraud Rule/Channel/Product slicers | Drillthrough to flagged cases | Quality of fraud rules | Use measure |
+| Escalation Rate | COUNT(Manual Reviews) / COUNT(Fraud Flags) | Card Visual | Escalation Status | Escalation Rate | Fraud Rule/Channel/Product slicers | Drillthrough to flagged cases | Operational efficiency | Use measure |
+| Fraud Trend Over Time | COUNT(Confirmed Fraud) | Line Chart | Date, Fraud Status | Fraud Cases | Time/Product/Channel slicers | Drillthrough to flagged cases | Trend analysis | Use date table |
 
-- **Measures:**
-  - Total Applications = SUM('FactCredit'[ApplicationCount])
-  - Approved Applications = SUM('FactCredit'[ApprovedCount])
-  - Approval Rate = DIVIDE([Approved Applications], [Total Applications])
-  - Avg Processing Time = AVERAGE('FactCredit'[ProcessingTime])
-  - Applications by Region = CALCULATE([Total Applications], ALLEXCEPT('DimRegion', 'DimRegion'[RegionName]))
-  - Applications by Channel = CALCULATE([Total Applications], ALLEXCEPT('DimChannel', 'DimChannel'[ChannelName]))
-  - Applications by Product = CALCULATE([Total Applications], ALLEXCEPT('DimProduct', 'DimProduct'[ProductName]))
-  - Applications by Risk = CALCULATE([Total Applications], ALLEXCEPT('DimRiskSegment', 'DimRiskSegment'[RiskSegmentName]))
-  - Decline Counts = COUNT('FactCredit'[DeclineReasonID])
-  - Running Total Applications = CALCULATE([Total Applications], FILTER(ALL('DimDate'), 'DimDate'[Date] <= MAX('DimDate'[Date])))
-  - % Variance MoM = DIVIDE([Total Applications] - CALCULATE([Total Applications], DATEADD('DimDate'[Date], -1, MONTH)), CALCULATE([Total Applications], DATEADD('DimDate'[Date], -1, MONTH)))
-- **Calculated Columns:**
-  - Only if necessary (e.g., custom groupings)
-- **Time Intelligence:**
-  - Use built-in DAX functions for YTD, QTD, MTD
-- **KPI Logic:**
-  - Use disconnected table for targets
-- **Ranking:**
-  - RANKX for top regions/products
-
-# 4. Overall Dashboard Design
-
-- **Layout Suggestions:**
-  - Top row: Headline KPIs (Total Applications, Approved, Approval Rate, Avg Processing Time)
-  - Middle: Trend visuals (line, combo charts)
-  - Lower: Breakdown visuals (region, channel, product, risk, funnel)
-  - Right: Filters/slicers (Date, Region, Channel, Product, Risk)
-- **Navigation Flow:**
-  - Use bookmarks for switching between summary and detail views
-  - Drillthrough pages for Region, Channel, Product
-- **Bookmark Usage:**
-  - For toggling between views (e.g., trend vs. breakdown)
-- **Performance Optimization:**
-  - Use Import mode unless data volume or latency requires DirectQuery
-  - Pre-aggregate data where possible
-  - Use measures, not calculated columns
-  - Avoid bi-directional relationships unless necessary
-  - Use incremental refresh for large fact tables
-  - Leverage query folding
-- **Color Scheme:**
-  - Use accessible color palette (colorblind-friendly)
-  - Consistent use of brand colors
-- **Typography:**
-  - Use clear, readable fonts (e.g., Segoe UI)
-  - Hierarchical font sizes for headings/KPIs
-- **Accessibility:**
-  - Add alt text to visuals
-  - Ensure sufficient color contrast
-  - Enable keyboard navigation
-  - Use tooltips for context
-- **Mobile Layout:**
-  - Simplify layout for mobile
-  - Prioritize KPIs and key trends
-  - Use responsive visuals
-- **Interactive Elements:**
-  - Slicers for Date, Region, Channel, Product, Risk
-  - Sync slicers across pages
-  - Drillthrough and tooltip pages
-  - Bookmarks for navigation
-
-# 5. Additional Recommendations
-
-- **Drillthrough Pages:**
-  - Region Details (all KPIs/visuals filtered by region)
-  - Channel Details
-  - Product Details
-- **Tooltip Pages:**
-  - Show additional context on hover (e.g., YoY trend, % change)
-- **Bookmarks:**
-  - Toggle between summary and detail
-- **Field Parameters:**
-  - Allow user to switch between different breakdowns (e.g., by Region, Channel, Product)
-- **Slicers:**
-  - Use dropdowns for high-cardinality fields
-  - Sync slicers across report pages
-- **Performance Optimizations:**
-  - Avoid excessive visuals per page
-  - Limit use of high-cardinality columns in visuals
-  - Use star schema, not snowflake, unless justified
-  - Avoid complex DAX in visuals
-  - Use aggregation tables for large datasets
-- **Pitfalls to Avoid:**
-  - Bi-directional relationships unless required
-  - Overuse of DirectQuery
-  - Excessive calculated columns
-  - Too many visuals per page
-  - High-cardinality columns in slicers
+### 5. First Transaction Behavior Report
+| Data Element | DAX Query / Measure | Recommended Visual | Data Fields | Measures | Interactivity | Drillthrough | Justification | Optimization Tips |
+|--------------|---------------------|-------------------|-------------|----------|---------------|-------------|--------------|-------------------|
+| Time to First Transaction | AVERAGE(First Transaction Date - Activation Date) | Card Visual | Activation/First Transaction Dates | Avg. Time to First Txn | Product/Channel/Segment slicers | Drillthrough to customer details | Engagement speed | Use DAX date diff |
+| Inactive Rate (30 days) | COUNT(No Txn in 30 Days) / COUNT(Activated Cards) | KPI Visual | Transaction Status | Inactive Rate | Product/Channel/Segment slicers | Drillthrough to customer details | Early dormancy | Use measure |
+| Avg. First Transaction Amount | SUM(First Transaction Value) / COUNT(Users Who Transacted) | Card Visual | Transaction Amount | Avg. First Txn Amount | Product/Channel/Segment slicers | Drillthrough to customer details | Early spend | Use measure |
+| First Transaction Distribution | COUNT(Transactions) | Histogram/Column Chart | First Transaction Amount | Transaction Count | Product/Channel/Segment slicers | Drillthrough to customer details | Spend pattern | Use binning |
 
 ---
 
-# Mandatory Outputs
+## 2. Semantic Model Recommendations
 
-outputURL : https://github.com/DIAscendion/PowerBIReport_Generation/tree/main/DI_Visual_Recommender_DIAS
+### Fact Tables
+- FactApplications (ApplicationID, ApplicantID, ProductID, ChannelID, ApplicationDate, ApprovalDate, ActivationDate, Status, CreditScore, FraudFlag, CampaignID)
+- FactCampaigns (CampaignID, ProductID, ChannelID, StartDate, EndDate, CampaignCost, Applications, Activations, Revenue)
+- FactFraud (FraudCheckID, ApplicationID, FraudRuleID, FraudStatus, ReviewStatus, Date)
+- FactTransactions (TransactionID, CardID, CustomerID, TransactionDate, TransactionAmount, OfferID)
 
-pipelineID : 14364
+### Dimension Tables
+- DimApplicant (ApplicantID, AgeGroup, Geography, IncomeLevel, EmploymentType, Demographics)
+- DimProduct (ProductID, ProductName, ProductType)
+- DimChannel (ChannelID, ChannelName, ChannelType)
+- DimCampaign (CampaignID, CampaignType, ChannelID, StartDate, EndDate)
+- DimDate (Date, Year, Month, Quarter, DayOfWeek)
+- DimFraudRule (FraudRuleID, RuleName, RuleType)
+- DimOffer (OfferID, OfferType, OfferDetails)
+
+### Relationships
+- FactApplications[ApplicantID] -> DimApplicant[ApplicantID] (Many-to-One, Single)
+- FactApplications[ProductID] -> DimProduct[ProductID] (Many-to-One, Single)
+- FactApplications[ChannelID] -> DimChannel[ChannelID] (Many-to-One, Single)
+- FactApplications[CampaignID] -> DimCampaign[CampaignID] (Many-to-One, Single)
+- FactApplications[ApplicationDate] -> DimDate[Date] (Many-to-One, Single)
+- FactCampaigns[ProductID] -> DimProduct[ProductID] (Many-to-One, Single)
+- FactCampaigns[ChannelID] -> DimChannel[ChannelID] (Many-to-One, Single)
+- FactFraud[ApplicationID] -> FactApplications[ApplicationID] (Many-to-One, Single)
+- FactFraud[FraudRuleID] -> DimFraudRule[FraudRuleID] (Many-to-One, Single)
+- FactTransactions[CustomerID] -> DimApplicant[ApplicantID] (Many-to-One, Single)
+- FactTransactions[TransactionDate] -> DimDate[Date] (Many-to-One, Single)
+
+### Cardinality & Direction
+- All relationships should be single direction (one-to-many from dimension to fact)
+- Avoid bi-directional relationships unless justified
+
+### Hierarchies
+- Date: Year > Quarter > Month > Day
+- Geography: Country > State > City
+- Product: Product Type > Product Name
+
+### Aggregations
+- Pre-aggregate application, activation, and transaction counts by date/product/channel for performance
+
+### Calculated Tables (if needed)
+- Risk Tier Table (for banding credit scores)
+- Disconnected Target Table (for KPI targets)
+
+---
+
+## 3. DAX Recommendations
+
+### Measures
+- Total Applications = COUNT(FactApplications[ApplicationID])
+- Approved Applications = CALCULATE([Total Applications], FactApplications[Status] = "Approved")
+- Activation Rate = DIVIDE([Activated Applications], [Approved Applications])
+- Approval Rate = DIVIDE([Approved Applications], [Total Applications])
+- Drop-off Rate = DIVIDE([Total Applications] - [Activated Applications], [Total Applications])
+- Avg. Time to Approval = AVERAGE(FactApplications[ApprovalDate] - FactApplications[ApplicationDate])
+- Cost per Acquisition = DIVIDE(SUM(FactCampaigns[CampaignCost]), [Activated Applications])
+- Campaign ROI = DIVIDE(SUM(FactCampaigns[Revenue]) - SUM(FactCampaigns[CampaignCost]), SUM(FactCampaigns[CampaignCost]))
+- Conversion Rate = DIVIDE([Activated Applications], [Total Applications])
+- Decline Rate = DIVIDE([Declined Applications], [Total Applications])
+- Avg. Credit Score = AVERAGE(FactApplications[CreditScore])
+- Fraud Detection Rate = DIVIDE([Confirmed Fraud], [Total Applications])
+- False Positive Rate = DIVIDE([Cleared Fraud Flags], [Total Fraud Flags])
+- Escalation Rate = DIVIDE([Manual Reviews], [Total Fraud Flags])
+- Time to First Transaction = AVERAGE(FactTransactions[TransactionDate] - FactApplications[ActivationDate])
+- Inactive Rate = DIVIDE([No Txn in 30 Days], [Activated Applications])
+- Avg. First Transaction Amount = DIVIDE(SUM(FactTransactions[TransactionAmount]), [Users Who Transacted])
+
+### Calculated Columns
+- Risk Tier = SWITCH(TRUE(), [CreditScore] < 580, "High", [CreditScore] < 700, "Moderate", [CreditScore] >= 700, "Low")
+- First Transaction Flag = IF([TransactionDate] <= [ActivationDate] + 30, 1, 0)
+
+### Time Intelligence
+- Use built-in DAX time intelligence for YTD, QTD, MTD trends
+
+### KPI Logic
+- Use disconnected tables for targets
+- Use DAX for dynamic KPI status (e.g., color coding)
+
+### Ranking/Running Totals
+- RANKX for campaign/product/channel ranking
+- RUNNINGTOTAL for cumulative applications/activations
+
+### Percent Variance
+- VARIANCE = ([Current Period] - [Previous Period]) / [Previous Period]
+
+---
+
+## 4. Overall Dashboard Design
+
+### Layout Suggestions
+- Landing page with high-level KPIs and navigation
+- Separate tabs/pages for each report (Funnel, Campaign, Risk, Fraud, Transaction)
+- Consistent slicers (date, product, channel, segment) on all pages
+- Use bookmarks for guided navigation and scenario analysis
+
+### Navigation Flow
+- Top-level navigation bar or left-side menu
+- Drillthrough from summary visuals to detailed tables
+- Tooltip pages for additional context
+
+### Bookmark Usage
+- Scenario toggles (e.g., show/hide segments)
+- Guided analysis paths
+
+### Performance Optimization
+- Use Import mode unless DirectQuery is required
+- Pre-aggregate large tables
+- Use incremental refresh for Fact tables
+- Avoid excessive calculated columns
+- Optimize DAX (avoid row context in measures)
+- Use query folding where possible
+
+### Color Scheme
+- Use organization branding
+- Color-blind friendly palettes
+- Consistent color coding for statuses (e.g., green=approved, red=declined)
+
+### Typography
+- Use clear, readable fonts
+- Hierarchical font sizes for headings, KPIs, and details
+
+### Accessibility
+- Alt text for visuals
+- Sufficient color contrast
+- Keyboard navigation
+- Use tooltips for explanations
+
+### Mobile Layout
+- Responsive design for key KPIs and visuals
+- Prioritize cards, KPIs, and summary charts
+- Minimize scrolling and horizontal navigation
+
+### Interactive Elements
+- Slicers for date, product, channel, segment
+- Drillthrough and tooltip pages
+- Sync slicers across pages
+- Field parameters for dynamic axis selection
+
+---
+
+## Additional Recommendations
+- Implement row-level security for PII and sensitive data
+- Use audit logs for access to sensitive reports
+- Regularly review and optimize data model as requirements evolve
+- Document all DAX measures and model relationships
+
+---
+
+# End of Power BI Dashboard Visuals Recommender
