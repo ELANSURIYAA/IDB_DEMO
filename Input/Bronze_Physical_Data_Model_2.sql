@@ -1,246 +1,270 @@
-_____________________________________________
-## *Author*: AAVA
-## *Created on*:   
-## *Description*:   Bronze layer physical data model for Credit Card Acquisition Reporting (raw ingestion tables for lakehouse delta tables)
-## *Version*: 2
-## *Updated on*: 
-## *Changes*: 
-1. Added new fields for applicant demographics (geography, age_group, income_level, employment_type) and campaign cost.
-2. Updated data types for compatibility with latest input schema (e.g., FLOAT to NUMBER where appropriate, VARCHAR to STRING).
-3. Indexing request not implemented as Snowflake and lakehouse delta tables do not support indexes in the Bronze layer; this is by design and best practice.
-## *Reason*: Align with new reporting requirements and ensure compatibility with latest schema and Snowflake best practices.
-_____________________________________________
+Gold Layer
 
-1. Bronze Layer DDL Script
+---
+**DDL Scripts (Fact and Dimension Tables)**
 
--- 1. bronze_applicants
-CREATE TABLE IF NOT EXISTS bronze_applicants (
-    applicant_id NUMBER,
-    full_name STRING,
-    email STRING,
-    phone_number STRING,
-    dob DATE,
-    ssn STRING,
-    channel STRING,
-    geography STRING,
-    age_group STRING,
-    income_level NUMBER,
-    employment_type STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
+-- Go_Applicant_Dimension (SCD Type 2)
+CREATE TABLE IF NOT EXISTS Gold.go_applicant_dimension (
+  applicant_id STRING,
+  geography VARCHAR(100),
+  age_group VARCHAR(50),
+  income_level VARCHAR(50),
+  employment_type VARCHAR(50),
+  credit_score INT,
+  risk_tier VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (risk_tier);
+
+-- Go_Application_Fact
+CREATE TABLE IF NOT EXISTS Gold.go_application_fact (
+  application_id STRING,
+  applicant_id STRING,
+  card_product_id STRING,
+  acquisition_channel_id STRING,
+  campaign_id STRING,
+  application_submission_date DATE,
+  approval_date DATE,
+  activation_date DATE,
+  application_status VARCHAR(50),
+  application_outcome VARCHAR(50),
+  decline_reason VARCHAR(255),
+  application_stage VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (application_status);
+
+-- Go_Card_Product_Dimension (SCD Type 1)
+CREATE TABLE IF NOT EXISTS Gold.go_card_product_dimension (
+  card_product_id STRING,
+  product_name VARCHAR(100),
+  product_category VARCHAR(50),
+  product_launch_date DATE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (product_category);
+
+-- Go_Acquisition_Channel_Dimension (SCD Type 1)
+CREATE TABLE IF NOT EXISTS Gold.go_acquisition_channel_dimension (
+  acquisition_channel_id STRING,
+  channel_name VARCHAR(100),
+  channel_type VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (channel_type);
+
+-- Go_Campaign_Dimension (SCD Type 2)
+CREATE TABLE IF NOT EXISTS Gold.go_campaign_dimension (
+  campaign_id STRING,
+  campaign_name VARCHAR(100),
+  campaign_type VARCHAR(50),
+  campaign_start_date DATE,
+  campaign_end_date DATE,
+  campaign_cost DOUBLE,
+  campaign_quarter VARCHAR(10),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (campaign_type);
+
+-- Go_Fraud_Check_Fact
+CREATE TABLE IF NOT EXISTS Gold.go_fraud_check_fact (
+  fraud_check_id STRING,
+  application_id STRING,
+  fraud_check_type VARCHAR(100),
+  check_execution_date DATE,
+  screening_result VARCHAR(50),
+  escalation_status VARCHAR(50),
+  resolution_outcome VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (screening_result);
+
+-- Go_Transaction_Fact
+CREATE TABLE IF NOT EXISTS Gold.go_transaction_fact (
+  transaction_id STRING,
+  application_id STRING,
+  first_transaction_date DATE,
+  first_transaction_amount DOUBLE,
+  transaction_channel VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (transaction_channel);
+
+-- Go_Promotional_Offer_Dimension (SCD Type 2)
+CREATE TABLE IF NOT EXISTS Gold.go_promotional_offer_dimension (
+  offer_id STRING,
+  offer_name VARCHAR(100),
+  offer_type VARCHAR(50),
+  offer_eligibility VARCHAR(255),
+  offer_redemption_date DATE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
 )
 USING DELTA;
 
--- 2. bronze_applications
-CREATE TABLE IF NOT EXISTS bronze_applications (
-    application_id NUMBER,
-    applicant_id NUMBER,
-    card_product_id NUMBER,
-    application_date DATE,
-    status STRING,
-    approval_date DATE,
-    rejection_reason STRING,
-    acquisition_channel STRING,
-    campaign_id NUMBER,
-    application_outcome STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
+---
+
+**Error Data Table DDL Script**
+
+CREATE TABLE IF NOT EXISTS Gold.go_error_data (
+  error_id STRING,
+  error_source_table VARCHAR(100),
+  error_column VARCHAR(100),
+  error_type VARCHAR(50),
+  error_description VARCHAR(255),
+  error_value VARCHAR(255),
+  error_detected_on TIMESTAMP,
+  load_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (error_type);
+
+---
+
+**Audit Table DDL Script**
+
+CREATE TABLE IF NOT EXISTS Gold.go_process_audit (
+  audit_id STRING,
+  source_table VARCHAR(100),
+  load_date DATE,
+  processed_by VARCHAR(100),
+  processing_time DOUBLE,
+  status VARCHAR(50),
+  pipeline_run_id STRING,
+  audit_message VARCHAR(255)
+)
+USING DELTA
+PARTITIONED BY (status);
+
+---
+
+**Aggregated Tables DDL Script**
+
+-- Go_Aggregate_Campaign_Performance
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_campaign_performance (
+  aggregate_campaign_performance_id STRING,
+  campaign_name VARCHAR(100),
+  approval_rate DOUBLE,
+  activation_rate DOUBLE,
+  avg_time_to_approval DOUBLE,
+  drop_off_rate DOUBLE,
+  cost_per_acquisition DOUBLE,
+  campaign_roi DOUBLE,
+  conversion_rate DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (campaign_name);
+
+-- Go_Aggregate_Risk_Segment
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_risk_segment (
+  aggregate_risk_segment_id STRING,
+  risk_tier VARCHAR(50),
+  approval_rate DOUBLE,
+  decline_rate DOUBLE,
+  avg_credit_score DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (risk_tier);
+
+-- Go_Aggregate_Fraud_Screening
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_fraud_screening (
+  aggregate_fraud_screening_id STRING,
+  fraud_check_type VARCHAR(100),
+  fraud_detection_rate DOUBLE,
+  false_positive_rate DOUBLE,
+  escalation_rate DOUBLE,
+  clearance_rate DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (fraud_check_type);
+
+-- Go_Aggregate_Transaction_Behavior
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_transaction_behavior (
+  aggregate_transaction_behavior_id STRING,
+  avg_time_to_first_txn DOUBLE,
+  avg_first_transaction_amt DOUBLE,
+  inactive_rate DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
 )
 USING DELTA;
 
--- 3. bronze_card_products
-CREATE TABLE IF NOT EXISTS bronze_card_products (
-    card_product_id NUMBER,
-    card_name STRING,
-    category STRING,
-    interest_rate NUMBER,
-    annual_fee NUMBER,
-    product_type STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+---
 
--- 4. bronze_credit_scores
-CREATE TABLE IF NOT EXISTS bronze_credit_scores (
-    credit_score_id NUMBER,
-    applicant_id NUMBER,
-    score NUMBER,
-    score_date DATE,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+**Update DDL Script**
 
--- 5. bronze_document_submissions
-CREATE TABLE IF NOT EXISTS bronze_document_submissions (
-    document_id NUMBER,
-    application_id NUMBER,
-    document_type STRING,
-    upload_date DATE,
-    verified_flag BOOLEAN,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+-- Example: Add a new column to go_application_fact
+ALTER TABLE Gold.go_application_fact ADD COLUMNS (application_channel VARCHAR(50));
 
--- 6. bronze_verification_results
-CREATE TABLE IF NOT EXISTS bronze_verification_results (
-    verification_id NUMBER,
-    application_id NUMBER,
-    verification_type STRING,
-    result STRING,
-    verified_on DATE,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+-- Example: Add a new column to go_applicant_dimension
+ALTER TABLE Gold.go_applicant_dimension ADD COLUMNS (marital_status VARCHAR(50));
 
--- 7. bronze_underwriting_decisions
-CREATE TABLE IF NOT EXISTS bronze_underwriting_decisions (
-    decision_id NUMBER,
-    application_id NUMBER,
-    decision STRING,
-    decision_reason STRING,
-    decision_date DATE,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+-- Example: Add a new column to go_card_product_dimension
+ALTER TABLE Gold.go_card_product_dimension ADD COLUMNS (reward_points INT);
 
--- 8. bronze_campaigns
-CREATE TABLE IF NOT EXISTS bronze_campaigns (
-    campaign_id NUMBER,
-    campaign_name STRING,
-    channel STRING,
-    start_date DATE,
-    end_date DATE,
-    campaign_type STRING,
-    marketing_cost NUMBER,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+---
 
--- 9. bronze_application_campaigns
-CREATE TABLE IF NOT EXISTS bronze_application_campaigns (
-    app_campaign_id NUMBER,
-    application_id NUMBER,
-    campaign_id NUMBER,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+Data Retention Policies
 
--- 10. bronze_activations
-CREATE TABLE IF NOT EXISTS bronze_activations (
-    activation_id NUMBER,
-    application_id NUMBER,
-    activation_date DATE,
-    first_transaction_amount NUMBER,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+- Retention periods for the Gold layer:
+  * Standard retention: 5 years for all Gold tables.
+  * Error and audit tables: 7 years for compliance and traceability.
 
--- 11. bronze_fraud_checks
-CREATE TABLE IF NOT EXISTS bronze_fraud_checks (
-    fraud_check_id NUMBER,
-    application_id NUMBER,
-    check_type STRING,
-    check_result STRING,
-    check_date DATE,
-    screening_result STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+- Archiving strategies:
+  * Data older than the retention period will be moved to a dedicated archival storage zone (e.g., Azure Data Lake cold storage or separate Delta tables with "_archive" suffix).
+  * Archival jobs will run monthly to move and purge expired data from Gold tables.
+  * Metadata columns (load_date, update_date) will be used to identify records for archiving.
 
--- 12. bronze_offers
-CREATE TABLE IF NOT EXISTS bronze_offers (
-    offer_id NUMBER,
-    card_product_id NUMBER,
-    offer_detail STRING,
-    valid_from DATE,
-    valid_to DATE,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+---
 
--- 13. bronze_offer_performance
-CREATE TABLE IF NOT EXISTS bronze_offer_performance (
-    offer_analytics_id NUMBER,
-    offer_id NUMBER,
-    applications_count NUMBER,
-    activations_count NUMBER,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+**Assumptions and Design Decisions**
 
--- 14. bronze_address_history
-CREATE TABLE IF NOT EXISTS bronze_address_history (
-    address_id NUMBER,
-    applicant_id NUMBER,
-    address_type STRING,
-    street STRING,
-    city STRING,
-    state STRING,
-    zip STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+- All id fields (e.g., applicant_id, application_id, etc.) are included as STRING type for uniqueness and compatibility.
+- Data types are chosen for compatibility with Microsoft Fabric Spark SQL and PySpark (e.g., DOUBLE for FLOAT, VARCHAR for string).
+- Partitioning is chosen based on common query patterns and business domains (e.g., by status, category, type, or name).
+- No primary key, foreign key, or unique constraints are enforced at the Spark SQL layer.
+- All tables use Delta Lake format for ACID compliance and efficient upserts.
+- Indexes are not explicitly defined as Spark SQL handles optimization internally; partitioning is used for performance.
+- Audit and error tables are included for operational monitoring and compliance.
+- Update DDL script provides a template for schema evolution.
+- All columns from the Silver layer are included, with additional id fields as required.
+- No use of 'GENERATED ALWAYS AS IDENTITY', 'UNIQUE', 'Text', or 'DATETIME' types; only Spark SQL-compatible types are used.
+- No explicit foreign keys or primary keys in DDL scripts.
+- All tables include metadata columns: load_date, update_date, source_system.
 
--- 15. bronze_employment_info
-CREATE TABLE IF NOT EXISTS bronze_employment_info (
-    employment_id NUMBER,
-    applicant_id NUMBER,
-    employer_name STRING,
-    job_title STRING,
-    income NUMBER,
-    employment_type STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
+---
 
--- 16. bronze_transactions
-CREATE TABLE IF NOT EXISTS bronze_transactions (
-    transaction_id NUMBER,
-    activation_id NUMBER,
-    first_transaction_date DATE,
-    transaction_amount NUMBER,
-    promotional_offer STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    update_timestamp TIMESTAMP_NTZ,
-    source_system STRING
-)
-USING DELTA;
-
--- 17. bronze_audit
-CREATE TABLE IF NOT EXISTS bronze_audit (
-    record_id NUMBER AUTOINCREMENT,
-    source_table STRING,
-    load_timestamp TIMESTAMP_NTZ,
-    processed_by STRING,
-    processing_time NUMBER,
-    status STRING
-)
-USING DELTA;
+apiCost: 0.080000
