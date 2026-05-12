@@ -1,1 +1,68 @@
-
+{
+  "id": 1,
+  "resourcePackages": [],
+  "sections": [
+    {
+      "id": 0,
+      "name": "ReportSection1",
+      "displayName": "Application & Activation Funnel Report",
+      "displayOption": 1,
+      "height": 720,
+      "width": 1280,
+      "visualContainers": [
+        {
+          "id": 0,
+          "x": 10,
+          "y": 10,
+          "z": 2000,
+          "width": 250,
+          "height": 90,
+          "config": "{\"name\":\"card00\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10,\"y\":10,\"z\":2000,\"width\":250,\"height\":90}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"MeasureTable.Approval Rate\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Approval Rate\"},\"Name\":\"MeasureTable.Approval Rate\"}]},\"columnProperties\":{},\"visualContainerObjects\":{},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "query": "{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Approval Rate\"},\"Name\":\"MeasureTable.Approval Rate\"}]}",
+          "dataTransforms": "{\"selects\":[{\"displayName\":\"Approval Rate\",\"queryName\":\"MeasureTable.Approval Rate\",\"roles\":{\"Values\":true},\"type\":0,\"expr\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Approval Rate\"}}}],\"projectionOrdering\":{\"Values\":[0]}}"
+        },
+        {
+          "id": 1,
+          "x": 270,
+          "y": 10,
+          "z": 2000,
+          "width": 250,
+          "height": 90,
+          "config": "{\"name\":\"card01\",\"layouts\":[{\"id\":0,\"position\":{\"x\":270,\"y\":10,\"z\":2000,\"width\":250,\"height\":90}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"MeasureTable.Activation Rate\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Activation Rate\"},\"Name\":\"MeasureTable.Activation Rate\"}]},\"columnProperties\":{},\"visualContainerObjects\":{},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "query": "{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Activation Rate\"},\"Name\":\"MeasureTable.Activation Rate\"}]}",
+          "dataTransforms": "{\"selects\":[{\"displayName\":\"Activation Rate\",\"queryName\":\"MeasureTable.Activation Rate\",\"roles\":{\"Values\":true},\"type\":0,\"expr\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Activation Rate\"}}}],\"projectionOrdering\":{\"Values\":[0]}}"
+        },
+        {
+          "id": 2,
+          "x": 530,
+          "y": 10,
+          "z": 2000,
+          "width": 250,
+          "height": 90,
+          "config": "{\"name\":\"card02\",\"layouts\":[{\"id\":0,\"position\":{\"x\":530,\"y\":10,\"z\":2000,\"width\":250,\"height\":90}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"MeasureTable.Drop-off Rate\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Drop-off Rate\"},\"Name\":\"MeasureTable.Drop-off Rate\"}]},\"columnProperties\":{},\"visualContainerObjects\":{},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "query": "{\"Version\":2,\"From\":[{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Drop-off Rate\"},\"Name\":\"MeasureTable.Drop-off Rate\"}]}",
+          "dataTransforms": "{\"selects\":[{\"displayName\":\"Drop-off Rate\",\"queryName\":\"MeasureTable.Drop-off Rate\",\"roles\":{\"Values\":true},\"type\":0,\"expr\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Drop-off Rate\"}}}],\"projectionOrdering\":{\"Values\":[0]}}"
+        },
+        {
+          "id": 3,
+          "x": 10,
+          "y": 110,
+          "z": 3000,
+          "width": 600,
+          "height": 300,
+          "config": "{\"name\":\"funnelChart10\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10,\"y\":110,\"z\":3000,\"width\":600,\"height\":300}}],\"singleVisual\":{\"visualType\":\"funnelChart\",\"projections\":{\"Category\":[{\"queryRef\":\"go_application_fact.application_stage\"}],\"Y\":[{\"queryRef\":\"MeasureTable.Approval Rate\"},{\"queryRef\":\"MeasureTable.Activation Rate\"},{\"queryRef\":\"MeasureTable.Drop-off Rate\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"a\",\"Entity\":\"go_application_fact\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"application_stage\"},\"Name\":\"go_application_fact.application_stage\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Approval Rate\"},\"Name\":\"MeasureTable.Approval Rate\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Activation Rate\"},\"Name\":\"MeasureTable.Activation Rate\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Drop-off Rate\"},\"Name\":\"MeasureTable.Drop-off Rate\"}]},\"columnProperties\":{},\"visualContainerObjects\":{},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "query": "{\"Version\":2,\"From\":[{\"Name\":\"a\",\"Entity\":\"go_application_fact\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"MeasureTable\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"application_stage\"},\"Name\":\"go_application_fact.application_stage\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Approval Rate\"},\"Name\":\"MeasureTable.Approval Rate\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Activation Rate\"},\"Name\":\"MeasureTable.Activation Rate\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Drop-off Rate\"},\"Name\":\"MeasureTable.Drop-off Rate\"}]}",
+          "dataTransforms": "{\"selects\":[{\"displayName\":\"application_stage\",\"queryName\":\"go_application_fact.application_stage\",\"roles\":{\"Category\":true},\"type\":1,\"expr\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"application_stage\"}}},{\"displayName\":\"Approval Rate\",\"queryName\":\"MeasureTable.Approval Rate\",\"roles\":{\"Y\":true},\"type\":0,\"expr\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Approval Rate\"}}},{\"displayName\":\"Activation Rate\",\"queryName\":\"MeasureTable.Activation Rate\",\"roles\":{\"Y\":true},\"type\":0,\"expr\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Activation Rate\"}}},{\"displayName\":\"Drop-off Rate\",\"queryName\":\"MeasureTable.Drop-off Rate\",\"roles\":{\"Y\":true},\"type\":0,\"expr\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Drop-off Rate\"}}}],\"projectionOrdering\":{\"Category\":[0],\"Y\":[1,2,3]}}"
+        }
+      ],
+      "config": "{}",
+      "filters": "[]"
+    }
+  ],
+  "config": "{\"version\":\"5.47\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU06\",\"version\":\"5.47\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useStylableVisualContainerHeader\":true,\"exportDataMode\":1}}",
+  "layoutOptimization": 0
+}
