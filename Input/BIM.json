@@ -1,0 +1,185 @@
+{
+"name":"SemanticModel",
+"compatibilityLevel":1600,
+"model":{
+"culture":"en-IN",
+"dataAccessOptions":{"legacyRedirects":true,"returnErrorValuesAsNull":true},
+"defaultPowerBIDataSourceVersion":"powerBI_V3",
+"sourceQueryCulture":"en-IN",
+"tables":[
+{
+"name":"go_applicant_dimension",
+"lineageTag":"b7e3c2e8-2a4a-4d9c-b2f7-0d2c8b7a1e01",
+"columns":[
+{"name":"applicant_id","dataType":"string","sourceColumn":"applicant_id","lineageTag":"e2b2e4d2-0a8e-4a9c-9a0e-8b2c7d1a0e01","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"geography","dataType":"string","sourceColumn":"geography","lineageTag":"f3c2e4d2-1a8e-4a9c-9a0e-8b2c7d1a0e02","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"age_group","dataType":"string","sourceColumn":"age_group","lineageTag":"a4c2e4d2-2a8e-4a9c-9a0e-8b2c7d1a0e03","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"income_level","dataType":"string","sourceColumn":"income_level","lineageTag":"b5c2e4d2-3a8e-4a9c-9a0e-8b2c7d1a0e04","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"employment_type","dataType":"string","sourceColumn":"employment_type","lineageTag":"c6c2e4d2-4a8e-4a9c-9a0e-8b2c7d1a0e05","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"credit_score","dataType":"int64","sourceColumn":"credit_score","lineageTag":"d7c2e4d2-5a8e-4a9c-9a0e-8b2c7d1a0e06","summarizeBy":"average","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"risk_tier","dataType":"string","sourceColumn":"risk_tier","lineageTag":"e8c2e4d2-6a8e-4a9c-9a0e-8b2c7d1a0e07","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"f9c2e4d2-7a8e-4a9c-9a0e-8b2c7d1a0e08","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"a0c2e4d2-8a8e-4a9c-9a0e-8b2c7d1a0e09","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"b1c2e4d2-9a8e-4a9c-9a0e-8b2c7d1a0e10","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"marital_status","dataType":"string","sourceColumn":"marital_status","lineageTag":"c2c2e4d2-0b8e-4a9c-9a0e-8b2c7d1a0e11","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_applicant_dimension","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_applicant_dimension = Source{[Schema=\"Gold\",Item=\"go_applicant_dimension\"]}[Data]","in","    go_applicant_dimension"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_application_fact",
+"lineageTag":"d1f3c2e8-3b4a-4d9c-b2f7-0d2c8b7a1e02",
+"columns":[
+{"name":"application_id","dataType":"string","sourceColumn":"application_id","lineageTag":"e2d2e4d2-1b8e-4a9c-9a0e-8b2c7d1a0e12","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"applicant_id","dataType":"string","sourceColumn":"applicant_id","lineageTag":"f3d2e4d2-2b8e-4a9c-9a0e-8b2c7d1a0e13","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"card_product_id","dataType":"string","sourceColumn":"card_product_id","lineageTag":"a4d2e4d2-3b8e-4a9c-9a0e-8b2c7d1a0e14","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"acquisition_channel_id","dataType":"string","sourceColumn":"acquisition_channel_id","lineageTag":"b5d2e4d2-4b8e-4a9c-9a0e-8b2c7d1a0e15","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_id","dataType":"string","sourceColumn":"campaign_id","lineageTag":"c6d2e4d2-5b8e-4a9c-9a0e-8b2c7d1a0e16","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_submission_date","dataType":"dateTime","sourceColumn":"application_submission_date","lineageTag":"d7d2e4d2-6b8e-4a9c-9a0e-8b2c7d1a0e17","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"approval_date","dataType":"dateTime","sourceColumn":"approval_date","lineageTag":"e8d2e4d2-7b8e-4a9c-9a0e-8b2c7d1a0e18","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"activation_date","dataType":"dateTime","sourceColumn":"activation_date","lineageTag":"f9d2e4d2-8b8e-4a9c-9a0e-8b2c7d1a0e19","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_status","dataType":"string","sourceColumn":"application_status","lineageTag":"a0d2e4d2-9b8e-4a9c-9a0e-8b2c7d1a0e20","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_outcome","dataType":"string","sourceColumn":"application_outcome","lineageTag":"b1d2e4d2-0c8e-4a9c-9a0e-8b2c7d1a0e21","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"decline_reason","dataType":"string","sourceColumn":"decline_reason","lineageTag":"c2d2e4d2-1c8e-4a9c-9a0e-8b2c7d1a0e22","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_stage","dataType":"string","sourceColumn":"application_stage","lineageTag":"d3d2e4d2-2c8e-4a9c-9a0e-8b2c7d1a0e23","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"e4d2e4d2-3c8e-4a9c-9a0e-8b2c7d1a0e24","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"f5d2e4d2-4c8e-4a9c-9a0e-8b2c7d1a0e25","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"a6d2e4d2-5c8e-4a9c-9a0e-8b2c7d1a0e26","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_channel","dataType":"string","sourceColumn":"application_channel","lineageTag":"b7d2e4d2-6c8e-4a9c-9a0e-8b2c7d1a0e27","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_application_fact","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_application_fact = Source{[Schema=\"Gold\",Item=\"go_application_fact\"]}[Data]","in","    go_application_fact"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_card_product_dimension",
+"lineageTag":"e1f3c2e8-4b4a-4d9c-b2f7-0d2c8b7a1e03",
+"columns":[
+{"name":"card_product_id","dataType":"string","sourceColumn":"card_product_id","lineageTag":"e2e2e4d2-2d8e-4a9c-9a0e-8b2c7d1a0e28","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"product_name","dataType":"string","sourceColumn":"product_name","lineageTag":"f3e2e4d2-3d8e-4a9c-9a0e-8b2c7d1a0e29","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"product_category","dataType":"string","sourceColumn":"product_category","lineageTag":"a4e2e4d2-4d8e-4a9c-9a0e-8b2c7d1a0e30","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"product_launch_date","dataType":"dateTime","sourceColumn":"product_launch_date","lineageTag":"b5e2e4d2-5d8e-4a9c-9a0e-8b2c7d1a0e31","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"c6e2e4d2-6d8e-4a9c-9a0e-8b2c7d1a0e32","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"d7e2e4d2-7d8e-4a9c-9a0e-8b2c7d1a0e33","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"e8e2e4d2-8d8e-4a9c-9a0e-8b2c7d1a0e34","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"reward_points","dataType":"int64","sourceColumn":"reward_points","lineageTag":"f9e2e4d2-9d8e-4a9c-9a0e-8b2c7d1a0e35","summarizeBy":"sum","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_card_product_dimension","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_card_product_dimension = Source{[Schema=\"Gold\",Item=\"go_card_product_dimension\"]}[Data]","in","    go_card_product_dimension"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_acquisition_channel_dimension",
+"lineageTag":"f1f3c2e8-5b4a-4d9c-b2f7-0d2c8b7a1e04",
+"columns":[
+{"name":"acquisition_channel_id","dataType":"string","sourceColumn":"acquisition_channel_id","lineageTag":"e2f2e4d2-3e8e-4a9c-9a0e-8b2c7d1a0e36","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"channel_name","dataType":"string","sourceColumn":"channel_name","lineageTag":"f3f2e4d2-4e8e-4a9c-9a0e-8b2c7d1a0e37","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"channel_type","dataType":"string","sourceColumn":"channel_type","lineageTag":"a4f2e4d2-5e8e-4a9c-9a0e-8b2c7d1a0e38","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"b5f2e4d2-6e8e-4a9c-9a0e-8b2c7d1a0e39","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"c6f2e4d2-7e8e-4a9c-9a0e-8b2c7d1a0e40","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"d7f2e4d2-8e8e-4a9c-9a0e-8b2c7d1a0e41","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_acquisition_channel_dimension","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_acquisition_channel_dimension = Source{[Schema=\"Gold\",Item=\"go_acquisition_channel_dimension\"]}[Data]","in","    go_acquisition_channel_dimension"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_campaign_dimension",
+"lineageTag":"a1f3c2e8-6b4a-4d9c-b2f7-0d2c8b7a1e05",
+"columns":[
+{"name":"campaign_id","dataType":"string","sourceColumn":"campaign_id","lineageTag":"e2a2e4d2-4f8e-4a9c-9a0e-8b2c7d1a0e42","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_name","dataType":"string","sourceColumn":"campaign_name","lineageTag":"f3a2e4d2-5f8e-4a9c-9a0e-8b2c7d1a0e43","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_type","dataType":"string","sourceColumn":"campaign_type","lineageTag":"a4a2e4d2-6f8e-4a9c-9a0e-8b2c7d1a0e44","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_start_date","dataType":"dateTime","sourceColumn":"campaign_start_date","lineageTag":"b5a2e4d2-7f8e-4a9c-9a0e-8b2c7d1a0e45","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_end_date","dataType":"dateTime","sourceColumn":"campaign_end_date","lineageTag":"c6a2e4d2-8f8e-4a9c-9a0e-8b2c7d1a0e46","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_cost","dataType":"double","sourceColumn":"campaign_cost","lineageTag":"d7a2e4d2-9f8e-4a9c-9a0e-8b2c7d1a0e47","summarizeBy":"sum","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"campaign_quarter","dataType":"string","sourceColumn":"campaign_quarter","lineageTag":"e8a2e4d2-0g8e-4a9c-9a0e-8b2c7d1a0e48","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"f9a2e4d2-1g8e-4a9c-9a0e-8b2c7d1a0e49","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"a0a2e4d2-2g8e-4a9c-9a0e-8b2c7d1a0e50","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"b1a2e4d2-3g8e-4a9c-9a0e-8b2c7d1a0e51","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_campaign_dimension","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_campaign_dimension = Source{[Schema=\"Gold\",Item=\"go_campaign_dimension\"]}[Data]","in","    go_campaign_dimension"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_fraud_check_fact",
+"lineageTag":"b1f3c2e8-7b4a-4d9c-b2f7-0d2c8b7a1e06",
+"columns":[
+{"name":"fraud_check_id","dataType":"string","sourceColumn":"fraud_check_id","lineageTag":"e2b2e4d2-5h8e-4a9c-9a0e-8b2c7d1a0e52","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_id","dataType":"string","sourceColumn":"application_id","lineageTag":"f3b2e4d2-6h8e-4a9c-9a0e-8b2c7d1a0e53","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"fraud_check_type","dataType":"string","sourceColumn":"fraud_check_type","lineageTag":"a4b2e4d2-7h8e-4a9c-9a0e-8b2c7d1a0e54","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"check_execution_date","dataType":"dateTime","sourceColumn":"check_execution_date","lineageTag":"b5b2e4d2-8h8e-4a9c-9a0e-8b2c7d1a0e55","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"screening_result","dataType":"string","sourceColumn":"screening_result","lineageTag":"c6b2e4d2-9h8e-4a9c-9a0e-8b2c7d1a0e56","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"escalation_status","dataType":"string","sourceColumn":"escalation_status","lineageTag":"d7b2e4d2-0i8e-4a9c-9a0e-8b2c7d1a0e57","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"resolution_outcome","dataType":"string","sourceColumn":"resolution_outcome","lineageTag":"e8b2e4d2-1i8e-4a9c-9a0e-8b2c7d1a0e58","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"f9b2e4d2-2i8e-4a9c-9a0e-8b2c7d1a0e59","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"a0b2e4d2-3i8e-4a9c-9a0e-8b2c7d1a0e60","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"b1b2e4d2-4i8e-4a9c-9a0e-8b2c7d1a0e61","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_fraud_check_fact","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_fraud_check_fact = Source{[Schema=\"Gold\",Item=\"go_fraud_check_fact\"]}[Data]","in","    go_fraud_check_fact"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_transaction_fact",
+"lineageTag":"c1f3c2e8-8b4a-4d9c-b2f7-0d2c8b7a1e07",
+"columns":[
+{"name":"transaction_id","dataType":"string","sourceColumn":"transaction_id","lineageTag":"e2c2e4d2-6j8e-4a9c-9a0e-8b2c7d1a0e62","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"application_id","dataType":"string","sourceColumn":"application_id","lineageTag":"f3c2e4d2-7j8e-4a9c-9a0e-8b2c7d1a0e63","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"first_transaction_date","dataType":"dateTime","sourceColumn":"first_transaction_date","lineageTag":"a4c2e4d2-8j8e-4a9c-9a0e-8b2c7d1a0e64","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"first_transaction_amount","dataType":"double","sourceColumn":"first_transaction_amount","lineageTag":"b5c2e4d2-9j8e-4a9c-9a0e-8b2c7d1a0e65","summarizeBy":"sum","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"transaction_channel","dataType":"string","sourceColumn":"transaction_channel","lineageTag":"c6c2e4d2-0k8e-4a9c-9a0e-8b2c7d1a0e66","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"d7c2e4d2-1k8e-4a9c-9a0e-8b2c7d1a0e67","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"e8c2e4d2-2k8e-4a9c-9a0e-8b2c7d1a0e68","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"f9c2e4d2-3k8e-4a9c-9a0e-8b2c7d1a0e69","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_transaction_fact","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_transaction_fact = Source{[Schema=\"Gold\",Item=\"go_transaction_fact\"]}[Data]","in","    go_transaction_fact"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"go_promotional_offer_dimension",
+"lineageTag":"d1f3c2e8-9b4a-4d9c-b2f7-0d2c8b7a1e08",
+"columns":[
+{"name":"offer_id","dataType":"string","sourceColumn":"offer_id","lineageTag":"e2d2e4d2-7l8e-4a9c-9a0e-8b2c7d1a0e70","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"offer_name","dataType":"string","sourceColumn":"offer_name","lineageTag":"f3d2e4d2-8l8e-4a9c-9a0e-8b2c7d1a0e71","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"offer_type","dataType":"string","sourceColumn":"offer_type","lineageTag":"a4d2e4d2-9l8e-4a9c-9a0e-8b2c7d1a0e72","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"offer_eligibility","dataType":"string","sourceColumn":"offer_eligibility","lineageTag":"b5d2e4d2-0m8e-4a9c-9a0e-8b2c7d1a0e73","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"offer_redemption_date","dataType":"dateTime","sourceColumn":"offer_redemption_date","lineageTag":"c6d2e4d2-1m8e-4a9c-9a0e-8b2c7d1a0e74","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"load_date","dataType":"dateTime","sourceColumn":"load_date","lineageTag":"d7d2e4d2-2m8e-4a9c-9a0e-8b2c7d1a0e75","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"update_date","dataType":"dateTime","sourceColumn":"update_date","lineageTag":"e8d2e4d2-3m8e-4a9c-9a0e-8b2c7d1a0e76","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]},
+{"name":"source_system","dataType":"string","sourceColumn":"source_system","lineageTag":"f9d2e4d2-4m8e-4a9c-9a0e-8b2c7d1a0e77","summarizeBy":"none","annotations":[{"name":"SummarizationSetBy","value":"Automatic"}]}
+],
+"partitions":[{"name":"go_promotional_offer_dimension","mode":"import","source":{"type":"m","expression":["let","    Source = DeltaLake.Tables(\"Gold\"),","    go_promotional_offer_dimension = Source{[Schema=\"Gold\",Item=\"go_promotional_offer_dimension\"]}[Data]","in","    go_promotional_offer_dimension"]}}],
+"annotations":[{"name":"PBI_NavigationStepName","value":"Navigation"},{"name":"PBI_ResultType","value":"Table"}]
+},
+{
+"name":"MeasureTable",
+"lineageTag":"e1f3c2e8-0c4a-4d9c-b2f7-0d2c8b7a1e09",
+"partitions":[{"name":"MeasureTable","mode":"import","source":{"type":"m","expression":["let","    Source = #table(type table [Dummy = text], {{\"X\"}}),","    Result = Table.RemoveColumns(Source,{\"Dummy\"})","in","    Result"]}}],
+"measures":[
+{"name":"Approval Rate","description":"Ratio of approved applications","expression":"DIVIDE(COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Approved\")),COUNTROWS('go_application_fact'))","formatString":"0.00%","lineageTag":"f1d3e4d2-1n8e-4a9c-9a0e-8b2c7d1a0e78"},
+{"name":"Activation Rate","description":"Ratio of activated to approved applications","expression":"DIVIDE(COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Activated\")),COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Approved\")))","formatString":"0.00%","lineageTag":"f2d3e4d2-2n8e-4a9c-9a0e-8b2c7d1a0e79"},
+{"name":"Average Time to Approval","description":"Avg. days from submission to approval","expression":"AVERAGE('go_application_fact'[approval_date] - 'go_application_fact'[application_submission_date])","formatString":"#,0.00","lineageTag":"f3d3e4d2-3n8e-4a9c-9a0e-8b2c7d1a0e80"},
+{"name":"Drop-off Rate","description":"Applications not activated","expression":"DIVIDE(COUNTROWS('go_application_fact') - COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Activated\")),COUNTROWS('go_application_fact'))","formatString":"0.00%","lineageTag":"f4d3e4d2-4n8e-4a9c-9a0e-8b2c7d1a0e81"},
+{"name":"Cost per Acquisition","description":"Cost per activated application","expression":"DIVIDE(SUM('go_campaign_dimension'[campaign_cost]),COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Activated\" && 'go_application_fact'[campaign_id] = 'go_campaign_dimension'[campaign_id])))","formatString":"#,0.00","lineageTag":"f5d3e4d2-5n8e-4a9c-9a0e-8b2c7d1a0e82"},
+{"name":"Campaign ROI","description":"Return on investment for campaigns","expression":"DIVIDE(SUM('go_transaction_fact'[first_transaction_amount]) - SUM('go_campaign_dimension'[campaign_cost]),SUM('go_campaign_dimension'[campaign_cost]))","formatString":"#,0.00","lineageTag":"f6d3e4d2-6n8e-4a9c-9a0e-8b2c7d1a0e83"},
+{"name":"Conversion Rate","description":"Activated applications rate","expression":"DIVIDE(COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Activated\")),COUNTROWS('go_application_fact'))","formatString":"0.00%","lineageTag":"f7d3e4d2-7n8e-4a9c-9a0e-8b2c7d1a0e84"},
+{"name":"Decline Rate","description":"Rejected applications rate","expression":"DIVIDE(COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Rejected\")),COUNTROWS('go_application_fact'))","formatString":"0.00%","lineageTag":"f8d3e4d2-8n8e-4a9c-9a0e-8b2c7d1a0e85"},
+{"name":"Average Credit Score","description":"Avg. applicant credit score","expression":"AVERAGE('go_applicant_dimension'[credit_score])","formatString":"#,0","lineageTag":"f9d3e4d2-9n8e-4a9c-9a0e-8b2c7d1a0e86"},
+{"name":"Fraud Detection Rate","description":"Confirmed frauds per application","expression":"DIVIDE(COUNTROWS(FILTER('go_fraud_check_fact','go_fraud_check_fact'[screening_result] = \"Confirmed Fraud\")),COUNTROWS('go_application_fact'))","formatString":"0.00%","lineageTag":"f0d3e4d2-0o8e-4a9c-9a0e-8b2c7d1a0e87"},
+{"name":"False Positive Rate","description":"Cleared flagged fraud checks","expression":"DIVIDE(COUNTROWS(FILTER('go_fraud_check_fact','go_fraud_check_fact'[resolution_outcome] = \"Cleared\")),COUNTROWS(FILTER('go_fraud_check_fact','go_fraud_check_fact'[screening_result] = \"Flagged\")))","formatString":"0.00%","lineageTag":"f1d3e4d2-1o8e-4a9c-9a0e-8b2c7d1a0e88"},
+{"name":"Escalation Rate","description":"Flagged checks escalated","expression":"DIVIDE(COUNTROWS(FILTER('go_fraud_check_fact','go_fraud_check_fact'[escalation_status] = \"Manual Review\")),COUNTROWS(FILTER('go_fraud_check_fact','go_fraud_check_fact'[screening_result] = \"Flagged\")))","formatString":"0.00%","lineageTag":"f2d3e4d2-2o8e-4a9c-9a0e-8b2c7d1a0e89"},
+{"name":"Time to First Transaction","description":"Avg. days from activation to txn","expression":"AVERAGE('go_transaction_fact'[first_transaction_date] - 'go_application_fact'[activation_date])","formatString":"#,0.00","lineageTag":"f3d3e4d2-3o8e-4a9c-9a0e-8b2c7d1a0e90"},
+{"name":"Inactive Rate","description":"Activated apps with no txn","expression":"DIVIDE(COUNTROWS(FILTER('go_transaction_fact',ISBLANK('go_transaction_fact'[first_transaction_date]))),COUNTROWS(FILTER('go_application_fact','go_application_fact'[application_outcome] = \"Activated\")))","formatString":"0.00%","lineageTag":"f4d3e4d2-4o8e-4a9c-9a0e-8b2c7d1a0e91"},
+{"name":"Average First Transaction Amount","description":"Avg. first transaction amount","expression":"AVERAGE('go_transaction_fact'[first_transaction_amount])","formatString":"#,0.00","lineageTag":"f5d3e4d2-5o8e-4a9c-9a0e-8b2c7d1a0e92"}
+]
+}
+],
+"relationships":[
+{"name":"FK_go_application_fact_go_applicant_dimension","fromTable":"go_application_fact","fromColumn":"applicant_id","toTable":"go_applicant_dimension","toColumn":"applicant_id","crossFilteringBehavior":"oneDirection","joinOnDateBehavior":"datePartOnly"},
+{"name":"FK_go_application_fact_go_card_product_dimension","fromTable":"go_application_fact","fromColumn":"card_product_id","toTable":"go_card_product_dimension","toColumn":"card_product_id","crossFilteringBehavior":"oneDirection","joinOnDateBehavior":"datePartOnly"},
+{"name":"FK_go_application_fact_go_acquisition_channel_dimension","fromTable":"go_application_fact","fromColumn":"acquisition_channel_id","toTable":"go_acquisition_channel_dimension","toColumn":"acquisition_channel_id","crossFilteringBehavior":"oneDirection","joinOnDateBehavior":"datePartOnly"},
+{"name":"FK_go_application_fact_go_campaign_dimension","fromTable":"go_application_fact","fromColumn":"campaign_id","toTable":"go_campaign_dimension","toColumn":"campaign_id","crossFilteringBehavior":"oneDirection","joinOnDateBehavior":"datePartOnly"},
+{"name":"FK_go_fraud_check_fact_go_application_fact","fromTable":"go_fraud_check_fact","fromColumn":"application_id","toTable":"go_application_fact","toColumn":"application_id","crossFilteringBehavior":"oneDirection","joinOnDateBehavior":"datePartOnly"},
+{"name":"FK_go_transaction_fact_go_application_fact","fromTable":"go_transaction_fact","fromColumn":"application_id","toTable":"go_application_fact","toColumn":"application_id","crossFilteringBehavior":"oneDirection","joinOnDateBehavior":"datePartOnly"}
+],
+"cultures":[{"name":"en-IN","linguisticMetadata":{"content":{"Version":"1.0.0","Language":"en-US"},"contentType":"json"}}],
+"annotations":[{"name":"__PBI_TimeIntelligenceEnabled","value":"1"}]
+}
+}
