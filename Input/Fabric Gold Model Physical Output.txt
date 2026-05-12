@@ -1,0 +1,270 @@
+Gold Layer
+
+---
+**DDL Scripts (Fact and Dimension Tables)**
+
+-- Go_Applicant_Dimension (SCD Type 2)
+CREATE TABLE IF NOT EXISTS Gold.go_applicant_dimension (
+  applicant_id STRING,
+  geography VARCHAR(100),
+  age_group VARCHAR(50),
+  income_level VARCHAR(50),
+  employment_type VARCHAR(50),
+  credit_score INT,
+  risk_tier VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (risk_tier);
+
+-- Go_Application_Fact
+CREATE TABLE IF NOT EXISTS Gold.go_application_fact (
+  application_id STRING,
+  applicant_id STRING,
+  card_product_id STRING,
+  acquisition_channel_id STRING,
+  campaign_id STRING,
+  application_submission_date DATE,
+  approval_date DATE,
+  activation_date DATE,
+  application_status VARCHAR(50),
+  application_outcome VARCHAR(50),
+  decline_reason VARCHAR(255),
+  application_stage VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (application_status);
+
+-- Go_Card_Product_Dimension (SCD Type 1)
+CREATE TABLE IF NOT EXISTS Gold.go_card_product_dimension (
+  card_product_id STRING,
+  product_name VARCHAR(100),
+  product_category VARCHAR(50),
+  product_launch_date DATE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (product_category);
+
+-- Go_Acquisition_Channel_Dimension (SCD Type 1)
+CREATE TABLE IF NOT EXISTS Gold.go_acquisition_channel_dimension (
+  acquisition_channel_id STRING,
+  channel_name VARCHAR(100),
+  channel_type VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (channel_type);
+
+-- Go_Campaign_Dimension (SCD Type 2)
+CREATE TABLE IF NOT EXISTS Gold.go_campaign_dimension (
+  campaign_id STRING,
+  campaign_name VARCHAR(100),
+  campaign_type VARCHAR(50),
+  campaign_start_date DATE,
+  campaign_end_date DATE,
+  campaign_cost DOUBLE,
+  campaign_quarter VARCHAR(10),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (campaign_type);
+
+-- Go_Fraud_Check_Fact
+CREATE TABLE IF NOT EXISTS Gold.go_fraud_check_fact (
+  fraud_check_id STRING,
+  application_id STRING,
+  fraud_check_type VARCHAR(100),
+  check_execution_date DATE,
+  screening_result VARCHAR(50),
+  escalation_status VARCHAR(50),
+  resolution_outcome VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (screening_result);
+
+-- Go_Transaction_Fact
+CREATE TABLE IF NOT EXISTS Gold.go_transaction_fact (
+  transaction_id STRING,
+  application_id STRING,
+  first_transaction_date DATE,
+  first_transaction_amount DOUBLE,
+  transaction_channel VARCHAR(50),
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (transaction_channel);
+
+-- Go_Promotional_Offer_Dimension (SCD Type 2)
+CREATE TABLE IF NOT EXISTS Gold.go_promotional_offer_dimension (
+  offer_id STRING,
+  offer_name VARCHAR(100),
+  offer_type VARCHAR(50),
+  offer_eligibility VARCHAR(255),
+  offer_redemption_date DATE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA;
+
+---
+
+**Error Data Table DDL Script**
+
+CREATE TABLE IF NOT EXISTS Gold.go_error_data (
+  error_id STRING,
+  error_source_table VARCHAR(100),
+  error_column VARCHAR(100),
+  error_type VARCHAR(50),
+  error_description VARCHAR(255),
+  error_value VARCHAR(255),
+  error_detected_on TIMESTAMP,
+  load_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (error_type);
+
+---
+
+**Audit Table DDL Script**
+
+CREATE TABLE IF NOT EXISTS Gold.go_process_audit (
+  audit_id STRING,
+  source_table VARCHAR(100),
+  load_date DATE,
+  processed_by VARCHAR(100),
+  processing_time DOUBLE,
+  status VARCHAR(50),
+  pipeline_run_id STRING,
+  audit_message VARCHAR(255)
+)
+USING DELTA
+PARTITIONED BY (status);
+
+---
+
+**Aggregated Tables DDL Script**
+
+-- Go_Aggregate_Campaign_Performance
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_campaign_performance (
+  aggregate_campaign_performance_id STRING,
+  campaign_name VARCHAR(100),
+  approval_rate DOUBLE,
+  activation_rate DOUBLE,
+  avg_time_to_approval DOUBLE,
+  drop_off_rate DOUBLE,
+  cost_per_acquisition DOUBLE,
+  campaign_roi DOUBLE,
+  conversion_rate DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (campaign_name);
+
+-- Go_Aggregate_Risk_Segment
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_risk_segment (
+  aggregate_risk_segment_id STRING,
+  risk_tier VARCHAR(50),
+  approval_rate DOUBLE,
+  decline_rate DOUBLE,
+  avg_credit_score DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (risk_tier);
+
+-- Go_Aggregate_Fraud_Screening
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_fraud_screening (
+  aggregate_fraud_screening_id STRING,
+  fraud_check_type VARCHAR(100),
+  fraud_detection_rate DOUBLE,
+  false_positive_rate DOUBLE,
+  escalation_rate DOUBLE,
+  clearance_rate DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA
+PARTITIONED BY (fraud_check_type);
+
+-- Go_Aggregate_Transaction_Behavior
+CREATE TABLE IF NOT EXISTS Gold.go_aggregate_transaction_behavior (
+  aggregate_transaction_behavior_id STRING,
+  avg_time_to_first_txn DOUBLE,
+  avg_first_transaction_amt DOUBLE,
+  inactive_rate DOUBLE,
+  load_date DATE,
+  update_date DATE,
+  source_system VARCHAR(50)
+)
+USING DELTA;
+
+---
+
+**Update DDL Script**
+
+-- Example: Add a new column to go_application_fact
+ALTER TABLE Gold.go_application_fact ADD COLUMNS (application_channel VARCHAR(50));
+
+-- Example: Add a new column to go_applicant_dimension
+ALTER TABLE Gold.go_applicant_dimension ADD COLUMNS (marital_status VARCHAR(50));
+
+-- Example: Add a new column to go_card_product_dimension
+ALTER TABLE Gold.go_card_product_dimension ADD COLUMNS (reward_points INT);
+
+---
+
+Data Retention Policies
+
+- Retention periods for the Gold layer:
+  * Standard retention: 5 years for all Gold tables.
+  * Error and audit tables: 7 years for compliance and traceability.
+
+- Archiving strategies:
+  * Data older than the retention period will be moved to a dedicated archival storage zone (e.g., Azure Data Lake cold storage or separate Delta tables with "_archive" suffix).
+  * Archival jobs will run monthly to move and purge expired data from Gold tables.
+  * Metadata columns (load_date, update_date) will be used to identify records for archiving.
+
+---
+
+**Assumptions and Design Decisions**
+
+- All id fields (e.g., applicant_id, application_id, etc.) are included as STRING type for uniqueness and compatibility.
+- Data types are chosen for compatibility with Microsoft Fabric Spark SQL and PySpark (e.g., DOUBLE for FLOAT, VARCHAR for string).
+- Partitioning is chosen based on common query patterns and business domains (e.g., by status, category, type, or name).
+- No primary key, foreign key, or unique constraints are enforced at the Spark SQL layer.
+- All tables use Delta Lake format for ACID compliance and efficient upserts.
+- Indexes are not explicitly defined as Spark SQL handles optimization internally; partitioning is used for performance.
+- Audit and error tables are included for operational monitoring and compliance.
+- Update DDL script provides a template for schema evolution.
+- All columns from the Silver layer are included, with additional id fields as required.
+- No use of 'GENERATED ALWAYS AS IDENTITY', 'UNIQUE', 'Text', or 'DATETIME' types; only Spark SQL-compatible types are used.
+- No explicit foreign keys or primary keys in DDL scripts.
+- All tables include metadata columns: load_date, update_date, source_system.
+
+---
+
+apiCost: 0.080000
